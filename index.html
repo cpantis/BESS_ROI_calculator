@@ -793,11 +793,11 @@ main { padding-top: calc(18px + env(safe-area-inset-top)); padding-bottom: calc(
                   <input type="number" id="roiCapexPerMWh" value="350000" step="10000" min="0" />
                 </div>
                 <div>
-                  <label class="field-label" for="roiCapexEMS">
-                    CAPEX EMS
-                    <span>(EUR)</span>
+                  <label class="field-label" for="roiCapexPCSFixed">
+                    CAPEX PCS+BMS
+                    <span>(EUR, fixed)</span>
                   </label>
-                  <input type="number" id="roiCapexEMS" value="50000" step="10000" min="0" />
+                  <input type="number" id="roiCapexPCSFixed" value="600000" step="10000" min="0" />
                 </div>
                 <div>
                   <label class="field-label" for="roiOpexPercent">
@@ -838,7 +838,7 @@ main { padding-top: calc(18px + env(safe-area-inset-top)); padding-bottom: calc(
                 <div class="roi-kpi-card">
                   <div class="roi-kpi-label">CAPEX total</div>
                   <div class="roi-kpi-value" id="roiKpiCapex">–</div>
-                  <div class="roi-kpi-note">EUR (battery + PCS)</div>
+                  <div class="roi-kpi-note">EUR (battery + fixed PCS/BMS)</div>
                 </div>
                 <div class="roi-kpi-card">
                   <div class="roi-kpi-label">Annual storage revenue</div>
@@ -1577,15 +1577,15 @@ function recomputeROI() {
       const degrPct     = parseNumber(document.getElementById("roiDegradation").value) / 100;
 
       const capexPerMWh   = parseNumber(document.getElementById("roiCapexPerMWh").value);     // EUR/MWh
-      const capexEMS = parseNumber(document.getElementById("roiCapexEMS").value);   // EUR
+      const capexPCSFixed = parseNumber(document.getElementById("roiCapexPCSFixed").value);  // EUR (fixed)
       const opexPct       = parseNumber(document.getElementById("roiOpexPercent").value) / 100;
 
       const wacc = parseNumber(document.getElementById("roiWacc").value) / 100;
 
       // CAPEX / OPEX in EUR
       const capexBatteryEUR = energyMWh * capexPerMWh;
-      const capexEMS     = Number(document.getElementById("roiCapexEMS").value) || 0;
-      const capexTotalEUR   = capexBatteryEUR + capexEMS;
+      const capexPCSEUR     = capexPCSFixed;
+      const capexTotalEUR   = capexBatteryEUR + capexPCSEUR;
       const opexAnnualEUR   = capexTotalEUR * opexPct;
 
       document.getElementById("roiKpiCapex").textContent =
@@ -1894,7 +1894,7 @@ chartROICum.update();
     function initROIInputs() {
       const ids = [
         "roiEnergyMWh","roiLifetimeYears","roiDegradation",
-        "roiCapexPerMWh","roiCapexEMS","roiOpexPercent",
+        "roiCapexPerMWh","roiCapexPCSFixed","roiOpexPercent",
                 "roiWacc","roiFx"
       ];
       ids.forEach(id => {
