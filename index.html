@@ -793,11 +793,11 @@ main { padding-top: calc(18px + env(safe-area-inset-top)); padding-bottom: calc(
                   <input type="number" id="roiCapexPerMWh" value="350000" step="10000" min="0" />
                 </div>
                 <div>
-                  <label class="field-label" for="roiCapexPCSPerMW">
-                    CAPEX PCS+BMS
-                    <span>(EUR/MW)</span>
+                  <label class="field-label" for="roiCapexEMS">
+                    CAPEX EMS
+                    <span>(EUR)</span>
                   </label>
-                  <input type="number" id="roiCapexPCSPerMW" value="150000" step="10000" min="0" />
+                  <input type="number" id="roiCapexEMS" value="50000" step="10000" min="0" />
                 </div>
                 <div>
                   <label class="field-label" for="roiOpexPercent">
@@ -1577,15 +1577,15 @@ function recomputeROI() {
       const degrPct     = parseNumber(document.getElementById("roiDegradation").value) / 100;
 
       const capexPerMWh   = parseNumber(document.getElementById("roiCapexPerMWh").value);     // EUR/MWh
-      const capexPCSperMW = parseNumber(document.getElementById("roiCapexPCSPerMW").value);   // EUR/MW
+      const capexEMS = parseNumber(document.getElementById("roiCapexEMS").value);   // EUR
       const opexPct       = parseNumber(document.getElementById("roiOpexPercent").value) / 100;
 
       const wacc = parseNumber(document.getElementById("roiWacc").value) / 100;
 
       // CAPEX / OPEX in EUR
       const capexBatteryEUR = energyMWh * capexPerMWh;
-      const capexPCSEUR     = powerMW * capexPCSperMW;
-      const capexTotalEUR   = capexBatteryEUR + capexPCSEUR;
+      const capexEMS     = Number(document.getElementById("roiCapexEMS").value) || 0;
+      const capexTotalEUR   = capexBatteryEUR + capexEMS;
       const opexAnnualEUR   = capexTotalEUR * opexPct;
 
       document.getElementById("roiKpiCapex").textContent =
@@ -1894,7 +1894,7 @@ chartROICum.update();
     function initROIInputs() {
       const ids = [
         "roiEnergyMWh","roiLifetimeYears","roiDegradation",
-        "roiCapexPerMWh","roiCapexPCSPerMW","roiOpexPercent",
+        "roiCapexPerMWh","roiCapexEMS","roiOpexPercent",
                 "roiWacc","roiFx"
       ];
       ids.forEach(id => {
